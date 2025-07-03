@@ -1,7 +1,6 @@
 {
-  "name": "levanter-whatsapp-bot",
+  "name": "levanter-backend",
   "version": "1.0.0",
-  "description": "Upload DP and connect WhatsApp using pairing code",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
