@@ -1,22 +1,47 @@
-# Levanter WhatsApp Bot
+# 🟢 Levanter WhatsApp DP Uploader
 
-> Upload TikTok-style image, pair WhatsApp, and set DP via browser.
+Generate and set a full-screen TikTok-style WhatsApp profile picture using Puppeteer & WhatsApp Web.
 
-### 🔧 How to Use
+👉 Upload an image  
+👉 Generate QR pairing code  
+👉 Automatically set WhatsApp DP (without cropping)  
 
-#### 🚀 Backend (Railway)
+---
+
+## ⚡ Features
+
+- ✅ Upload TikTok-size vertical photo
+- ✅ Link to WhatsApp via QR code (pairing)
+- ✅ Set uploaded image as WhatsApp DP using [Baileys](https://github.com/WhiskeySockets/Baileys)
+- ✅ Compatible with all devices
+
+---
+
+## 🛠️ Tech Stack
+
+- **Node.js** + Express
+- **Baileys** (WhatsApp Web socket lib)
+- **Multer** for image upload
+- **Plain HTML/JS** frontend
+- **Deployable on Vercel & Railway**
+
+---
+
+## 🚀 One-click Deploy
+
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/leadxSASI/leadx-sasi-project)
+
+> 📝 After deploying, remember to:
+> - Set your backend (Baileys server) using [Railway](https://railway.app/)
+> - Update your frontend `index.html` with the backend URL
+
+---
+
+## 📦 Local Development
+
+### Backend (Baileys server)
+
 ```bash
 cd backend
 npm install
 npm start
-```
-
-#### 🌐 Frontend (Vercel)
-- Deploy `/frontend/` folder to [Vercel](https://vercel.com)
-
-#### 🔁 Connect Frontend ↔ Backend
-- In `frontend/index.html`, replace:
-  ```js
-  https://your-railway-backend-url
-  ```
-  with actual Railway backend URL (e.g., `https://levanter-backend.up.railway.app`
