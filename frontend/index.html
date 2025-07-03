@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WhatsApp Link & DP Uploader</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 30px; }
+    input, button { margin: 10px; padding: 10px; font-size: 16px; }
+    img { max-width: 300px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>📤 Upload TikTok DP + Link to WhatsApp</h2>
+  <form id="form">
+    <input type="file" id="image" required><br>
+    <input type="text" id="phone" placeholder="+947XXXXXXXX" required><br>
+    <button type="submit">Generate Pairing Code</button>
+  </form>
+  <p id="pair-code"></p>
+  <img id="preview" src="" style="display:none;">
+
+  <button id="setdp" style="display:none;">Set as WhatsApp DP</button>
+  <p id="status"></p>
+
+  <script>
+    const form = document.getElementById("form");
+    const setdpBtn = document.getElementById("setdp");
+    const statusP = document.getElementById("status");
+    const previewImg = document.getElementById("preview");
+    let currentPhone = null;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById("phone").value;
+      const image = document.getElementById("image").files[0];
+      if(!phone || !image) return alert("Enter phone and select image");
+
+      currentPhone = phone;
+      statusP.textContent = "";
+      setdpBtn.style.display = "none";
+
+      // Upload image
+      const formData = new FormData();
+      formData.append("image", image);
+      const up = await fetch("/upload", { method: "POST", body: formData });
+      const upRes = await up.json();
+      if (upRes.path) {
+        previewImg.src = upRes.path;
+        previewImg.style.display = "block";
+      }
+
+      // Get pairing code
+      const res = await fetch("/pair?phone=" + encodeURIComponent(phone));
+      const data = await res.json();
+      if(data.pairingCode){
+        document.getElementById("pair-code").textContent = "Pairing Code (Scan QR in WhatsApp Web):";
+        showQR(data.pairingCode);
+        setdpBtn.style.display = "inline-block";
+      } else {
+        document.getElementById("pair-code").textContent = "No pairing code received";
+      }
+    });
+
+    function showQR(qr) {
+      const pairCodeElem = document.getElementById("pair-code");
+      pairCodeElem.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(qr) + '&size=200x200" alt="QR Code">';
+    }
+
+    setdpBtn.addEventListener("click", async () => {
+      if(!currentPhone) return alert("No phone paired yet");
+      statusP.textContent = "Setting profile picture...";
+
+      const res = await fetch("/setdp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: currentPhone }),
+      });
+      const data = await res.json();
+      if(data.message){
+        statusP.textContent = data.message;
+      } else {
+        statusP.textContent = "Failed to update profile picture";
+      }
+    });
+  </script>
+</body>
+</html>
